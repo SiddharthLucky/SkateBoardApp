@@ -2,7 +2,6 @@ package com.skateboardshare.skateboard_Rest_API.controller;
 
 import com.skateboardshare.skateboard_Rest_API.models.Skateboard;
 import com.skateboardshare.skateboard_Rest_API.service.SkateboardJPAService_JPA;
-import com.skateboardshare.skateboard_Rest_API.service.SkateboardServiceinterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

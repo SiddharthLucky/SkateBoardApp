@@ -18,8 +18,7 @@ public class SkateboardController {
 
     @Autowired
     SkateboardJPAService_JPA skateboardJPAService_jpa;
-    SkateboardServiceinterface skateboardServiceinterface;
-    
+
     @GetMapping({"", "/", "/index"})
     public String getIndexPage() {
         return "index";
@@ -27,7 +26,7 @@ public class SkateboardController {
 
     @GetMapping(path = "skateboards/{id}")
     public Optional<Skateboard> retrieveSkateboard(@PathVariable Integer id) {
-        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findById(id);
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findBoard(id);
 
         log.info("SkateBoard is found with id: " + id);
         return skateboard;
@@ -35,38 +34,38 @@ public class SkateboardController {
 
     @GetMapping(path = "skateboards")
     public List<Skateboard> retrieveAllSkateboards() {
-        return skateboardJPAService_jpa.findAll();
+        return skateboardJPAService_jpa.findAllBoards();
     }
 
     @GetMapping("skateboards/byLength/{length}")
     public Skateboard retrieveSkateBoardByLength(@PathVariable Integer length) {
-        Skateboard skateboard = skateboardServiceinterface.findByBoardLength(length);
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByBoardLength(length);
 
 
         log.info("Skateboard is found with length: " + length);
-        return skateboard;
+        return skateboard.get();
     }
 
     @GetMapping("skateboards/byWeight/{weight}")
     public Skateboard retrieveSkateboardByWeight(@PathVariable Integer weight) {
-        Skateboard skateboard = skateboardServiceinterface.findByBoardWeight(weight);
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByBoardWeight(weight);
 
 
         log.info("SkateBoard is found with weight: " + weight);
-        return skateboard;
+        return skateboard.get();
     }
 
     @GetMapping("skateboards/byBrand/{brand}")
-    public Skateboard retrieveSkateBoardByBrand(@PathVariable String brand) {
-        Skateboard skateboard = skateboardServiceinterface.findByBoardBrand(brand);
+    public Optional<Skateboard> retrieveSkateBoardByBrand(@PathVariable String brand) {
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByBoardBrand(brand);
 
         log.info("SkateBoard is found with brand: " + brand);
         return skateboard;
     }
 
     @GetMapping("skateboards/bylocation/{location}")
-    public Skateboard retrieveSkateBoardByLocation(@PathVariable String location) {
-        Skateboard skateboard = skateboardServiceinterface.findByBoardLocation(location);
+    public Optional<Skateboard> retrieveSkateBoardByLocation(@PathVariable String location) {
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByBoardLocation(location);
 
         log.info("SkateBoard is found with location: " + location);
         return skateboard;
@@ -74,23 +73,23 @@ public class SkateboardController {
 
     @GetMapping("skateboards/owner/{ownerName}")
     public Skateboard retrieveSkateBoardByOwnersName(@PathVariable String ownerName) {
-        Skateboard skateboard = skateboardServiceinterface.findByOwnersName(ownerName);
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByOwnersName(ownerName);
 
         log.info("SkateBoard is found under owners Name: " + ownerName);
-        return skateboard;
+        return skateboard.get();
     }
 
     @GetMapping("skateboards/borrower/{borrowersName}")
-    public Skateboard retrieveSkateBoardByBorrowersName(@PathVariable String borrowersName) {
-        Skateboard skateboard = skateboardServiceinterface.findByOwnersName(borrowersName);
+    public Optional<Skateboard> retrieveSkateBoardByBorrowersName(@PathVariable String borrowersName) {
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findByOwnersName(borrowersName);
 
         log.info("SkateBoard is found under Borrowers Name: " + borrowersName);
         return skateboard;
     }
 
-    @DeleteMapping("skateboards/{id}")
+    @DeleteMapping("skateboards/deleteBoard/{id}")
     public ResponseEntity<Object> deleteSkateBoard(@PathVariable Integer id) {
-        Skateboard skateBoard = skateboardServiceinterface.deleteSkateboardById(id);
+        Optional<Skateboard> skateBoard = skateboardJPAService_jpa.deleteSkateboardById(id);
 
         log.info("SkateBoard is deleted with id: " + id);
         return ResponseEntity.status(200).build();
@@ -105,11 +104,15 @@ public class SkateboardController {
                                                        @PathVariable(value = "location") String location,
                                                        @PathVariable(value = "borrowersName") String borrowersName,
                                                        @PathVariable(value = "isAvailable") Boolean isAvailable) {
-        Skateboard skateboard = skateboardServiceinterface.findBoard(id);
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findBoard(id);
 
-        Skateboard updateSkateBoard = skateboardServiceinterface.updateSkateboardDetails(id, ownerName, brand, length, weight, location, borrowersName, isAvailable);
-
-        log.info("SkateBoard details updated for id: " + skateboard.getId());
-        return ResponseEntity.ok(updateSkateBoard);
+        if(skateboard.isPresent())
+        {
+            Skateboard skateboard_toUpdate = new Skateboard(id, ownerName, brand, length, weight, location, borrowersName, isAvailable);
+            Optional<Skateboard> updateSkateBoard = skateboardJPAService_jpa.updateSkateboardDetails(skateboard_toUpdate);
+            log.info("SkateBoard details updated for id: " + (skateboard.get()).getId());
+            return ResponseEntity.ok(skateboard.get());
+        }
+        return null;
     }
 }

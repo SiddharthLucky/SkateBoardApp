@@ -1,30 +1,30 @@
 package com.skateboardshare.skateboard_Rest_API.service;
-
 import com.skateboardshare.skateboard_Rest_API.models.Skateboard;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SkateboardServiceinterface
 {
-    Skateboard saveBoard(Skateboard skateboard);
+    Optional<Skateboard> saveBoard(Skateboard skateboard);
 
-    Skateboard findBoard(Integer id);
+    Optional<Skateboard> findBoard(Integer id);
 
     List<Skateboard> findAllBoards();
 
-    Skateboard findByBoardLength(Integer length);
+    Optional<Skateboard> findByBoardLength(Integer length);
 
-    Skateboard findByBoardWeight(Integer weight);
+    Optional<Skateboard> findByBoardWeight(Integer weight);
 
-    Skateboard findByBoardBrand(String brand);
+    Optional<Skateboard> findByBoardBrand(String brand);
 
-    Skateboard findByBoardLocation(String location);
+    Optional<Skateboard> findByBoardLocation(String location);
 
-    Skateboard findByBorrowersName(String borrowersName);
+    Optional<Skateboard> findByBorrowersName(String borrowersName);
 
-    Skateboard findByOwnersName(String ownersName);
+    Optional<Skateboard> findByOwnersName(String ownersName);
 
-    Skateboard deleteSkateboardById(Integer id);
+    Optional<Skateboard> deleteSkateboardById(Integer id);
 
-    Skateboard updateSkateboardDetails(Integer id, String ownerName, String brand, Integer length, Integer weight, String location, String borrowersName,Boolean isAvailable);
+    Optional<Skateboard> updateSkateboardDetails(Skateboard skateboard);
 }

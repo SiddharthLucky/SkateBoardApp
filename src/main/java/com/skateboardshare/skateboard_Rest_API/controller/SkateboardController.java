@@ -1,6 +1,7 @@
 package com.skateboardshare.skateboard_Rest_API.controller;
 
 import com.skateboardshare.skateboard_Rest_API.models.Skateboard;
+import com.skateboardshare.skateboard_Rest_API.service.SkateboardJPAService_JPA;
 import com.skateboardshare.skateboard_Rest_API.service.SkateboardServiceinterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -15,17 +17,17 @@ import java.util.List;
 public class SkateboardController {
 
     @Autowired
-    private SkateboardServiceinterface skateboardServiceinterface;
-
-
+    SkateboardJPAService_JPA skateboardJPAService_jpa;
+    SkateboardServiceinterface skateboardServiceinterface;
+    
     @GetMapping({"", "/", "/index"})
     public String getIndexPage() {
         return "index";
     }
 
     @GetMapping(path = "skateboards/{id}")
-    public Skateboard retrieveSkateboard(@PathVariable Integer id) {
-        Skateboard skateboard = skateboardServiceinterface.findBoard(id);
+    public Optional<Skateboard> retrieveSkateboard(@PathVariable Integer id) {
+        Optional<Skateboard> skateboard = skateboardJPAService_jpa.findById(id);
 
         log.info("SkateBoard is found with id: " + id);
         return skateboard;
@@ -33,7 +35,7 @@ public class SkateboardController {
 
     @GetMapping(path = "skateboards")
     public List<Skateboard> retrieveAllSkateboards() {
-        return skateboardServiceinterface.findAllBoards();
+        return skateboardJPAService_jpa.findAll();
     }
 
     @GetMapping("skateboards/byLength/{length}")

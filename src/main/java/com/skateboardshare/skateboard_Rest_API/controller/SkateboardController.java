@@ -15,8 +15,13 @@ import java.util.Optional;
 @Slf4j
 public class SkateboardController {
 
+    private static SkateboardJPAService_JPA skateboardJPAService_jpa;
+
     @Autowired
-    SkateboardJPAService_JPA skateboardJPAService_jpa;
+    public SkateboardController(SkateboardJPAService_JPA skateboardJPAService_jpa)
+    {
+        this.skateboardJPAService_jpa = skateboardJPAService_jpa;
+    }
 
     @GetMapping({"", "/", "/index"})
     public String getIndexPage() {
@@ -110,7 +115,7 @@ public class SkateboardController {
             Skateboard skateboard_toUpdate = new Skateboard(id, ownerName, brand, length, weight, location, borrowersName, isAvailable);
             Optional<Skateboard> updateSkateBoard = skateboardJPAService_jpa.updateSkateboardDetails(skateboard_toUpdate);
             log.info("SkateBoard details updated for id: " + (skateboard.get()).getId());
-            return ResponseEntity.ok(skateboard.get());
+            return ResponseEntity.ok(updateSkateBoard.get());
         }
         return null;
     }

@@ -30,7 +30,7 @@ dependencies {
 group = 'com.skateboardshare.app'
 version = '0.0.1-SNAPSHOT'
 description = 'skateboard'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 publishing {
     publications {
